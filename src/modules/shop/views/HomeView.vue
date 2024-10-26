@@ -98,7 +98,7 @@
   <!-- Product List -->
   <ProductList v-else :products="products" />
 
-  <PaginationButton />
+  <PaginationButton :has-more-data="!!products && products.length < 10" :page="page" />
 </template>
 
 <script lang="ts" setup>
@@ -106,10 +106,22 @@ import PaginationButton from '@/modules/common/components/PaginationButton.vue';
 import { getProductsAction } from '@/modules/products/actions';
 import ProductList from '@/modules/products/components/ProductList.vue';
 import { useQuery } from '@tanstack/vue-query';
+import { ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const page = ref(Number(route.query.page || 1));
 
 const { data: products } = useQuery({
-  queryKey: ['products', { page: 1 }],
-  queryFn: () => getProductsAction(),
+  queryKey: ['products', { page: page }],
+  queryFn: () => getProductsAction(page.value),
   staleTime: 1000 * 60,
 });
+
+watch(
+  () => route.query.page,
+  (newPage) => {
+    page.value = Number(newPage || 1);
+  },
+);
 </script>
