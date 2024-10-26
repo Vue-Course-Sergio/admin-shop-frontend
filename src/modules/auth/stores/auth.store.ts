@@ -12,7 +12,7 @@ export const useAuthStore = defineStore('auth', () => {
   const login = async (email: string, password: string) => {
     try {
       const loginResponse = await loginAction(email, password);
-      if (!loginResponse.ok) return false;
+      if (!loginResponse.ok) return logout();
       user.value = loginResponse.user;
       token.value = loginResponse.token;
       authStatus.value = AuthStatus.Authenticated;
