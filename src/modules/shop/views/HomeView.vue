@@ -97,9 +97,12 @@
 
   <!-- Product List -->
   <ProductList v-else :products="products" />
+
+  <PaginationButton />
 </template>
 
 <script lang="ts" setup>
+import PaginationButton from '@/modules/common/components/PaginationButton.vue';
 import { getProductsAction } from '@/modules/products/actions';
 import ProductList from '@/modules/products/components/ProductList.vue';
 import { useQuery } from '@tanstack/vue-query';
