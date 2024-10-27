@@ -1,10 +1,12 @@
 <template>
   <h1 class="text-2xl font-semibold mb-4">Register</h1>
-  <form action="#" method="POST">
+  <form @submit.prevent="onRegister">
     <!-- Username Input -->
     <div class="mb-4">
       <label for="name" class="block text-gray-600">Name</label>
       <input
+        v-model="myForm.fullName"
+        ref="fullNameInputRef"
         type="text"
         id="name"
         name="name"
@@ -15,11 +17,13 @@
 
     <!-- Username Input -->
     <div class="mb-4">
-      <label for="username" class="block text-gray-600">Username</label>
+      <label for="email" class="block text-gray-600">Email</label>
       <input
-        type="text"
-        id="username"
-        name="username"
+        v-model="myForm.email"
+        ref="emailInputRef"
+        type="email"
+        id="email"
+        name="email"
         class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
         autocomplete="off"
       />
@@ -28,6 +32,8 @@
     <div class="mb-4">
       <label for="password" class="block text-gray-600">Password</label>
       <input
+        v-model="myForm.password"
+        ref="passwordInputRef"
         type="password"
         id="password"
         name="password"
@@ -35,21 +41,12 @@
         autocomplete="off"
       />
     </div>
-    <!-- Remember Me Checkbox -->
-    <div class="mb-4 flex items-center">
-      <input type="checkbox" id="remember" name="remember" class="text-blue-500" />
-      <label for="remember" class="text-gray-600 ml-2">Remember Me</label>
-    </div>
-    <!-- Forgot Password Link -->
-    <div class="mb-6 text-blue-500">
-      <a href="#" class="hover:underline">Forgot Password?</a>
-    </div>
     <!-- Login Button -->
     <button
       type="submit"
       class="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full"
     >
-      Login
+      Register
     </button>
   </form>
   <!-- Sign up  Link -->
@@ -57,3 +54,36 @@
     <RouterLink :to="{ name: 'login' }" class="hover:underline">Login Here</RouterLink>
   </div>
 </template>
+
+<script lang="ts" setup>
+import { useToast } from 'vue-toastification';
+import { useAuthStore } from '../stores/auth.store';
+import { reactive, ref } from 'vue';
+
+const authStore = useAuthStore();
+const toast = useToast();
+
+const fullNameInputRef = ref<HTMLInputElement | null>(null);
+const emailInputRef = ref<HTMLInputElement | null>(null);
+const passwordInputRef = ref<HTMLInputElement | null>(null);
+
+const myForm = reactive({
+  fullName: '',
+  email: '',
+  password: '',
+});
+
+const onRegister = async () => {
+  if (myForm.fullName.length === 0) return fullNameInputRef.value?.focus();
+  if (myForm.email.trim() === '') return emailInputRef.value?.focus();
+  if (myForm.password.trim() === '' || myForm.password.trim().length < 6) {
+    return passwordInputRef.value?.focus();
+  }
+
+  const ok = await authStore.register(myForm.fullName, myForm.email, myForm.password);
+
+  if (ok) return;
+
+  toast.error('Revisa los datos ingresados');
+};
+</script>
