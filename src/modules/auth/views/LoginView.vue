@@ -6,6 +6,7 @@
       <label for="email" class="block text-gray-600">Email</label>
       <input
         v-model="myForm.email"
+        ref="emailInputRef"
         type="text"
         id="email"
         name="email"
@@ -18,6 +19,7 @@
       <label for="password" class="block text-gray-600">Password</label>
       <input
         v-model="myForm.password"
+        ref="passwordInputRef"
         type="password"
         id="password"
         name="password"
@@ -55,13 +57,15 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue';
-import { useRouter } from 'vue-router';
+import { reactive, ref, watchEffect } from 'vue';
 import { useAuthStore } from '../stores/auth.store';
-
-const router = useRouter();
+import { useToast } from 'vue-toastification';
 
 const authStore = useAuthStore();
+const toast = useToast();
+
+const emailInputRef = ref<HTMLInputElement | null>(null);
+const passwordInputRef = ref<HTMLInputElement | null>(null);
 
 const myForm = reactive({
   email: '',
@@ -70,7 +74,28 @@ const myForm = reactive({
 });
 
 const onLogin = async () => {
+  if (myForm.email.trim() === '') return emailInputRef.value?.focus();
+
+  if (myForm.password.trim() === '' || myForm.password.trim().length < 6) {
+    return passwordInputRef.value?.focus();
+  }
+
+  if (myForm.rememberMe) localStorage.setItem('email', myForm.email);
+  else localStorage.removeItem('email');
+
   const ok = await authStore.login(myForm.email, myForm.password);
-  console.log({ ok });
+
+  if (ok) return;
+
+  toast.error('Revisa tus credenciales');
 };
+
+watchEffect(() => {
+  const email = localStorage.getItem('email');
+
+  if (email) {
+    myForm.email = email;
+    myForm.rememberMe = true;
+  }
+});
 </script>

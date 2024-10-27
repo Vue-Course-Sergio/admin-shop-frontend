@@ -3,11 +3,12 @@ import { computed, ref } from 'vue';
 import type { User } from '../interfaces/user.interface';
 import { AuthStatus } from '../enums/auth-status.enum';
 import { loginAction } from '../actions';
+import { useLocalStorage } from '@vueuse/core';
 
 export const useAuthStore = defineStore('auth', () => {
   const authStatus = ref<AuthStatus>(AuthStatus.Checking);
   const user = ref<User | undefined>();
-  const token = ref('');
+  const token = ref(useLocalStorage('token', ''));
 
   const login = async (email: string, password: string) => {
     try {
