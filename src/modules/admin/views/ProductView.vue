@@ -9,7 +9,20 @@
       <!-- Primera parte del formulario -->
       <div class="mb-4">
         <label for="title" class="form-label">Título</label>
-        <input v-model="title" v-bind="titleAttrs" type="text" id="title" class="form-control" />
+        <input
+          :class="[
+            'form-control',
+            {
+              'border-red-500': errors.title,
+            },
+          ]"
+          v-model="title"
+          v-bind="titleAttrs"
+          type="text"
+          id="title"
+          class="form-control"
+        />
+        <span v-if="errors.title" class="text-red-400">{{ errors.title }}</span>
       </div>
 
       <div class="mb-4">
