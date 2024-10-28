@@ -1,7 +1,7 @@
 import { getProductByIdAction } from '@/modules/products/actions';
 import { useQuery } from '@tanstack/vue-query';
 import { useFieldArray, useForm } from 'vee-validate';
-import { defineComponent, watchEffect } from 'vue';
+import { defineComponent, watch, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 
 import * as yup from 'yup';
@@ -39,7 +39,7 @@ export default defineComponent({
       retry: false,
     });
 
-    const { values, defineField, errors, handleSubmit } = useForm({
+    const { values, defineField, errors, handleSubmit, resetForm } = useForm({
       validationSchema,
       initialValues: product.value,
     });
@@ -71,6 +71,20 @@ export default defineComponent({
         router.replace({ name: 'admin-products' });
       }
     });
+
+    watch(
+      product,
+      () => {
+        if (!product) return;
+        resetForm({
+          values: product.value,
+        });
+      },
+      {
+        deep: true,
+        immediate: true,
+      },
+    );
 
     return {
       // Props

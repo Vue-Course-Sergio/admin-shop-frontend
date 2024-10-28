@@ -1,6 +1,8 @@
 <template>
   <div class="bg-white px-5 py-2 rounded">
-    <h1 class="text-3xl">Product: <small class="text-blue-500">Name</small></h1>
+    <h1 class="text-3xl">
+      Product: <small class="text-blue-500">{{ title }}</small>
+    </h1>
     <hr class="my-4" />
   </div>
 
