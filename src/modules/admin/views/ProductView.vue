@@ -1,8 +1,6 @@
 <template>
   <div class="bg-white px-5 py-2 rounded">
-    <h1 class="text-3xl">
-      Product: <small class="text-blue-500">{{ product?.title }}</small>
-    </h1>
+    <h1 class="text-3xl">Product: <small class="text-blue-500">Name</small></h1>
     <hr class="my-4" />
   </div>
 
@@ -11,7 +9,7 @@
       <!-- Primera parte del formulario -->
       <div class="mb-4">
         <label for="title" class="form-label">Título</label>
-        <input type="text" id="title" class="form-control" />
+        <input v-model="title" v-bind="titleAttrs" type="text" id="title" class="form-control" />
       </div>
 
       <div class="mb-4">
