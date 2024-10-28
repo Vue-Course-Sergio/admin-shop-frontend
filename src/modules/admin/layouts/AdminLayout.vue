@@ -162,42 +162,19 @@
         </div>
       </button>
       <div class="flex flex-col flex-grow p-4 overflow-auto">
-        <a
+        <RouterLink
+          :to="{ name: 'admin-dashboard' }"
           class="flex items-center flex-shrink-0 h-10 px-2 text-sm font-medium rounded hover:bg-gray-300"
-          href="#"
         >
-          <span class="leading-none">Item 1</span>
-        </a>
-        <a
+          <span class="leading-none">Dashboard</span>
+        </RouterLink>
+        <RouterLink
+          :to="{ name: 'admin-products' }"
           class="flex items-center flex-shrink-0 h-10 px-2 text-sm font-medium rounded hover:bg-gray-300"
-          href="#"
         >
-          <span class="leading-none">Item 2</span>
-        </a>
-        <a
-          class="flex items-center flex-shrink-0 h-10 px-2 text-sm font-medium rounded hover:bg-gray-300"
-          href="#"
-        >
-          <span class="leading-none">Item 3</span>
-        </a>
-        <a
-          class="flex items-center flex-shrink-0 h-10 px-2 text-sm font-medium rounded hover:bg-gray-300"
-          href="#"
-        >
-          <span class="leading-none">Item 4</span>
-        </a>
-        <a
-          class="flex items-center flex-shrink-0 h-10 px-2 text-sm font-medium rounded hover:bg-gray-300"
-          href="#"
-        >
-          <span class="leading-none">Item 5</span>
-        </a>
-        <a
-          class="flex items-center flex-shrink-0 h-10 px-2 text-sm font-medium rounded hover:bg-gray-300"
-          href="#"
-        >
-          <span class="leading-none">Item 6</span>
-        </a>
+          <span class="leading-none">Products</span>
+        </RouterLink>
+
         <a
           class="flex items-center flex-shrink-0 h-10 px-3 mt-auto text-sm font-medium bg-gray-200 rounded hover:bg-gray-300"
           href="#"
@@ -222,7 +199,7 @@
     </div>
     <div class="flex flex-col flex-grow">
       <div class="flex items-center flex-shrink-0 h-16 px-8 border-b border-gray-300">
-        <h1 class="text-lg font-medium">Page Title</h1>
+        <h1 class="text-lg font-medium">{{ authStore.user?.fullName }}</h1>
         <button
           class="flex items-center justify-center h-10 px-4 ml-auto text-sm font-medium rounded hover:bg-gray-300"
         >
@@ -282,3 +259,9 @@
     <span class="text-sm ml-1 leading-none">@lofiui</span>
   </a>
 </template>
+
+<script lang="ts" setup>
+import { useAuthStore } from '@/modules/auth/stores/auth.store';
+
+const authStore = useAuthStore();
+</script>
