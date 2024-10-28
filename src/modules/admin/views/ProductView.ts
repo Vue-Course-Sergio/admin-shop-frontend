@@ -66,6 +66,12 @@ export default defineComponent({
       else pushSize(size);
     };
 
+    const hasSize = (size: string) => {
+      const currentSizes = sizes.value.map((s) => s.value);
+
+      return currentSizes.includes(size) ? true : false;
+    };
+
     watchEffect(() => {
       if (isError.value && !isLoading.value) {
         router.replace({ name: 'admin-products' });
@@ -109,6 +115,7 @@ export default defineComponent({
       //Actions
       onSubmit,
       toggleSize,
+      hasSize,
     };
   },
 });

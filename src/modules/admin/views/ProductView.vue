@@ -14,12 +14,12 @@
         <CustomInput v-model="title" v-bind="titleAttrs" :error="errors.title" />
       </div>
 
-      <div class="mb-4">
+      <div class="mb-4 flex-1">
         <label for="slug" class="form-label">Slug</label>
         <CustomInput v-model="slug" v-bind="slugAttrs" :error="errors.slug" />
       </div>
 
-      <div class="mb-4">
+      <div class="mb-4 flex-1">
         <label for="description" class="form-label">Descripción</label>
         <CustomTextArea
           v-model="description"
@@ -48,7 +48,13 @@
             v-for="size of allSizes"
             :key="size"
             @click="toggleSize(size)"
-            class="bg-blue-100 p-2 rounded w-14 mr-2 flex-1"
+            :class="[
+              'p-2 rounded w-14 mr-2 flex-1',
+              {
+                'bg-blue-100': !hasSize(size),
+                'bg-blue-500 text-white': hasSize(size),
+              },
+            ]"
           >
             {{ size }}
           </button>
