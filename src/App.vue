@@ -13,15 +13,20 @@ const authStore = useAuthStore();
 const router = useRouter();
 const route = useRoute();
 
-authStore.$subscribe((_, state) => {
-  if (state.authStatus === AuthStatus.Checking) {
-    authStore.checkAuthStatus();
-    return;
-  }
+authStore.$subscribe(
+  (_, state) => {
+    if (state.authStatus === AuthStatus.Checking) {
+      authStore.checkAuthStatus();
+      return;
+    }
 
-  if (route.path.includes('/auth') && state.authStatus === AuthStatus.Authenticated) {
-    router.replace({ name: 'home' });
-    return;
-  }
-});
+    if (route.path.includes('/auth') && state.authStatus === AuthStatus.Authenticated) {
+      router.replace({ name: 'home' });
+      return;
+    }
+  },
+  {
+    immediate: true,
+  },
+);
 </script>
