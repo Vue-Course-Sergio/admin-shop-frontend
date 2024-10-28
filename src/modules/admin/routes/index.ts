@@ -5,6 +5,14 @@ import type { RouteRecordRaw } from 'vue-router';
 export const adminRoutes: RouteRecordRaw = {
   path: '/admin',
   beforeEnter: [isAuthenticatedGuard, isAdminGuard],
+  redirect: { name: 'admin-dashboard' },
   name: 'admin',
   component: () => import('@/modules/admin/layouts/AdminLayout.vue'),
+  children: [
+    {
+      path: 'dashboard',
+      name: 'admin-dashboard',
+      component: () => import('@/modules/admin/views/DashboardView.vue'),
+    },
+  ],
 };
