@@ -1,6 +1,6 @@
 import { getProductByIdAction } from '@/modules/products/actions';
 import { useQuery } from '@tanstack/vue-query';
-import { useForm } from 'vee-validate';
+import { useFieldArray, useForm } from 'vee-validate';
 import { defineComponent, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -41,6 +41,7 @@ export default defineComponent({
 
     const { values, defineField, errors, handleSubmit } = useForm({
       validationSchema,
+      initialValues: product.value,
     });
 
     const [title, titleAttrs] = defineField('title');
@@ -50,9 +51,20 @@ export default defineComponent({
     const [stock, stockAttrs] = defineField('stock');
     const [gender, genderAttrs] = defineField('gender');
 
+    const { fields: images } = useFieldArray<string>('images');
+    const { fields: sizes, remove: removeSize, push: pushSize } = useFieldArray<string>('sizes');
+
     const onSubmit = handleSubmit((value) => {
       console.log({ value });
     });
+
+    const toggleSize = (size: string) => {
+      const currentSizes = sizes.value.map((s) => s.value);
+      const hasSize = currentSizes.includes(size);
+
+      if (hasSize) removeSize(currentSizes.indexOf(size));
+      else pushSize(size);
+    };
 
     watchEffect(() => {
       if (isError.value && !isLoading.value) {
@@ -76,10 +88,13 @@ export default defineComponent({
       stockAttrs,
       gender,
       genderAttrs,
+      images,
+      sizes,
       // Getters
       allSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
       //Actions
       onSubmit,
+      toggleSize,
     };
   },
 });
