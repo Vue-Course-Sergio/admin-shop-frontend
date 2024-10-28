@@ -4,7 +4,7 @@
     <hr class="my-4" />
   </div>
 
-  <form class="grid grid-cols-1 sm:grid-cols-2 bg-white px-5 gap-5">
+  <form class="grid grid-cols-1 sm:grid-cols-2 bg-white px-5 gap-5" @submit="onSubmit">
     <div class="first-col">
       <!-- Primera parte del formulario -->
       <div class="mb-4">
@@ -19,21 +19,22 @@
 
       <div class="mb-4">
         <label for="description" class="form-label">Descripción</label>
-        <textarea
-          id="description"
-          class="shadow h-32 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        ></textarea>
+        <CustomTextArea
+          v-model="description"
+          v-bind="descriptionAttrs"
+          :error="errors.description"
+        />
       </div>
 
       <div class="flex flex-row gap-3">
         <div class="mb-4">
           <label for="price" class="form-label">Precio</label>
-          <CustomInput v-model.number="price" v-bind="priceAttrs" :error="errors.price" />
+          <CustomInput v-model="price" v-bind="priceAttrs" :error="errors.price" type="number" />
         </div>
 
         <div class="mb-4">
           <label for="stock" class="form-label">Inventario</label>
-          <CustomInput v-model.number="stock" v-bind="stockAttrs" :error="errors.stock" />
+          <CustomInput v-model="stock" v-bind="stockAttrs" :error="errors.stock" type="number" />
         </div>
       </div>
 
