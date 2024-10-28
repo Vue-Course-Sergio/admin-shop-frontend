@@ -1,5 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router';
-import isNotAuthenticatedGuard from '../guards/is-not-autheticated.guard copy';
+import isNotAuthenticatedGuard from '../guards/is-not-autheticated.guard';
 
 export const authRoutes: RouteRecordRaw = {
   path: '/auth',
