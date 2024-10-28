@@ -72,11 +72,12 @@ export const useAuthStore = defineStore('auth', () => {
     // Getters
     isChecking: computed(() => authStatus.value === AuthStatus.Checking),
     isAuthenticated: computed(() => authStatus.value === AuthStatus.Authenticated),
-    // TODO: Getter para saber si es admin
     username: computed(() => user.value?.fullName),
+    isAdmin: computed(() => user.value?.roles.includes('admin') ?? false),
     // Actions
     login,
     register,
+    logout,
     checkAuthStatus,
   };
 });
