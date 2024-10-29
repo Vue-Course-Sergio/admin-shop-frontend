@@ -135,6 +135,8 @@ export default defineComponent({
       resetForm({
         values: updateProduct.value,
       });
+
+      imagesFiles.value = [];
     });
 
     watch(
