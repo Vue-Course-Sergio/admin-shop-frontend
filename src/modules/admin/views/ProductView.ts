@@ -1,5 +1,5 @@
-import { getProductByIdAction } from '@/modules/products/actions';
-import { useQuery } from '@tanstack/vue-query';
+import { createUpdateProductAction, getProductByIdAction } from '@/modules/products/actions';
+import { useMutation, useQuery } from '@tanstack/vue-query';
 import { useFieldArray, useForm } from 'vee-validate';
 import { defineComponent, watch, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
@@ -7,6 +7,7 @@ import { useRouter } from 'vue-router';
 import * as yup from 'yup';
 import CustomInput from '@/modules/common/components/CustomInput.vue';
 import CustomTextArea from '@/modules/common/components/CustomTextArea.vue';
+import { useToast } from 'vue-toastification';
 
 const validationSchema = yup.object({
   title: yup.string().required().min(3),
@@ -28,6 +29,7 @@ export default defineComponent({
 
   setup(props) {
     const router = useRouter();
+    const toast = useToast();
 
     const {
       data: product,
@@ -37,6 +39,15 @@ export default defineComponent({
       queryKey: ['product', props.productId],
       queryFn: () => getProductByIdAction(props.productId),
       retry: false,
+    });
+
+    const {
+      mutate,
+      isPending,
+      isSuccess: isUpdateSuccess,
+      data: updateProduct,
+    } = useMutation({
+      mutationFn: createUpdateProductAction,
     });
 
     const { values, defineField, errors, handleSubmit, resetForm } = useForm({
@@ -53,8 +64,8 @@ export default defineComponent({
     const { fields: images } = useFieldArray<string>('images');
     const { fields: sizes, remove: removeSize, push: pushSize } = useFieldArray<string>('sizes');
 
-    const onSubmit = handleSubmit((value) => {
-      console.log({ value });
+    const onSubmit = handleSubmit(async (values) => {
+      mutate(values);
     });
 
     const toggleSize = (size: string) => {
@@ -91,6 +102,14 @@ export default defineComponent({
       },
     );
 
+    watch(isUpdateSuccess, (value) => {
+      if (!value) return;
+      toast.success('Product updated correctly!');
+      resetForm({
+        values: updateProduct.value,
+      });
+    });
+
     return {
       // Props
       values,
@@ -109,6 +128,7 @@ export default defineComponent({
       genderAttrs,
       images,
       sizes,
+      isPending,
       // Getters
       allSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
       //Actions

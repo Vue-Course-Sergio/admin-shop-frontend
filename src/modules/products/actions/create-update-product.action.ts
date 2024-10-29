@@ -29,6 +29,7 @@ const updateProduct = async (product: Partial<Product>) => {
 
   try {
     const { data } = await tesloApi.patch<Product>(`/products/${productId}`, product);
+
     return data;
   } catch (error) {
     console.warn(error);
