@@ -8,7 +8,7 @@ export const getProductsAction = async (
 ): Promise<Product[]> => {
   try {
     const { data } = await tesloApi.get<Product[]>(
-      `/products?limit=${limit}&offset=${page * limit}`,
+      `/products?limit=${limit}&offset=${(page - 1) * limit}`,
     );
 
     return data.map((product) => ({
