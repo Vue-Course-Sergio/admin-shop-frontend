@@ -68,7 +68,12 @@ export default defineComponent({
     const imagesFiles = ref<File[]>([]);
 
     const onSubmit = handleSubmit(async (values) => {
-      mutate(values);
+      const product = {
+        ...values,
+        images: [...values.images, ...imagesFiles.value],
+      };
+
+      mutate(product);
     });
 
     const toggleSize = (size: string) => {
@@ -97,8 +102,8 @@ export default defineComponent({
       }
     };
 
-    const temporalImageUrl = (file: File) => {
-      return URL.createObjectURL(file);
+    const temporalImageUrl = (imageFile: File) => {
+      return URL.createObjectURL(imageFile);
     };
 
     watchEffect(() => {
