@@ -27,7 +27,6 @@ export const getProductByIdAction = async (productId: string): Promise<Product> 
 
     return data;
   } catch (error) {
-    console.error(error);
     throw new Error(`Error getting product with id ${productId}`);
   }
 };
