@@ -1,7 +1,7 @@
 import { createUpdateProductAction, getProductByIdAction } from '@/modules/products/actions';
 import { useMutation, useQuery } from '@tanstack/vue-query';
 import { useFieldArray, useForm } from 'vee-validate';
-import { defineComponent, watch, watchEffect } from 'vue';
+import { defineComponent, ref, watch, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 
 import * as yup from 'yup';
@@ -62,8 +62,10 @@ export default defineComponent({
     const [stock, stockAttrs] = defineField('stock');
     const [gender, genderAttrs] = defineField('gender');
 
-    const { fields: images } = useFieldArray<string>('images');
     const { fields: sizes, remove: removeSize, push: pushSize } = useFieldArray<string>('sizes');
+    const { fields: images } = useFieldArray<string>('images');
+
+    const imagesFiles = ref<File[]>([]);
 
     const onSubmit = handleSubmit(async (values) => {
       mutate(values);
@@ -81,6 +83,22 @@ export default defineComponent({
       const currentSizes = sizes.value.map((s) => s.value);
 
       return currentSizes.includes(size) ? true : false;
+    };
+
+    const onFileChanged = (event: Event) => {
+      const fileInput = event.target as HTMLInputElement;
+      const fileList = fileInput.files;
+
+      if (!fileList) return;
+      if (fileList.length === 0) return;
+
+      for (const imageFile of fileList) {
+        imagesFiles.value.push(imageFile);
+      }
+    };
+
+    const temporalImageUrl = (file: File) => {
+      return URL.createObjectURL(file);
     };
 
     watchEffect(() => {
@@ -140,12 +158,15 @@ export default defineComponent({
       images,
       sizes,
       isPending,
+      imagesFiles,
       // Getters
       allSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
       //Actions
       onSubmit,
       toggleSize,
       hasSize,
+      onFileChanged,
+      temporalImageUrl,
     };
   },
 });
