@@ -1,5 +1,6 @@
 describe('Main', () => {
   test('should return proper env values', () => {
-    expect(1).toBe(1);
+    expect(import.meta.env.VITE_TESLO_API_URL).toBe('http://localhost:3000/api');
+    expect(import.meta.env.VITE_STAGE).toBe('test');
   });
 });
