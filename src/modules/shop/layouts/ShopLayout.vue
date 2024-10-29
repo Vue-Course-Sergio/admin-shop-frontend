@@ -1,7 +1,4 @@
 <template>
-  <!-- component -->
-  <!-- Create By Joker Banny -->
-
   <!-- Header Navbar -->
   <TopMenu />
 
