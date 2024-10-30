@@ -2,6 +2,8 @@ import { tesloApi } from '@/api/tesloApi';
 import { loginAction } from '@/modules/auth/actions';
 import { createUpdateProductAction } from '@/modules/products/actions';
 import type { Product } from '@/modules/products/interfaces/product.interface';
+import fs from 'fs';
+import path from 'path';
 
 describe('createUpdateProductAction', () => {
   beforeAll(async () => {
@@ -53,6 +55,7 @@ describe('createUpdateProductAction', () => {
       ...product,
       title: 'Updated Product',
       description: 'Updated Description',
+      stock: 10,
     };
 
     const resp = await createUpdateProductAction(updatedProduct);
@@ -63,7 +66,37 @@ describe('createUpdateProductAction', () => {
         id: productId,
         title: 'Updated Product',
         description: 'Updated Description',
+        stock: 10,
+        user: expect.anything(),
       }),
     );
+  });
+
+  test('should upload product image', async () => {
+    const imagePath = path.join(__dirname, '../../../fake', 't-shirt.jpg');
+    const imageBuffer = fs.readFileSync(imagePath);
+
+    const imageFile: File = new File([imageBuffer], 't-shirt.jpg', { type: 'image/jpeg' });
+
+    const product: Product = {
+      id: '',
+      title: 'Nuevo producto',
+      price: 100,
+      description: 'Producto de pruebas',
+      slug: 'test_product',
+      stock: 10,
+      sizes: [],
+      gender: 'kid',
+      tags: [],
+      images: [imageFile] as any,
+      user: {} as any,
+    };
+
+    const { images, id } = await createUpdateProductAction(product);
+
+    const [img1] = images;
+    expect(typeof img1).toBe('string');
+
+    await tesloApi.delete(`/products/${id}`);
   });
 });

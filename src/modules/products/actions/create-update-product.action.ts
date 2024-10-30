@@ -40,8 +40,8 @@ const updateProduct = async (productId: string, product: Partial<Product>) => {
   try {
     const { data } = await tesloApi.patch<Product>(`/products/${productId}`, product);
     return data;
-  } catch (error) {
-    console.warn(error);
+  } catch (error: any) {
+    console.warn(error?.response?.data);
     throw new Error('Error updating product');
   }
 };
@@ -50,8 +50,8 @@ const createProduct = async (product: Partial<Product>) => {
   try {
     const { data } = await tesloApi.post<Product>(`/products`, product);
     return data;
-  } catch (error) {
-    console.warn(error);
+  } catch (error: any) {
+    console.warn(error?.response?.data);
     throw new Error('Error creating product');
   }
 };
