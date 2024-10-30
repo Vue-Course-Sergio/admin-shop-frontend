@@ -43,4 +43,27 @@ describe('createUpdateProductAction', () => {
       id: expect.any(String),
     });
   });
+
+  test('should update a product', async () => {
+    const products = await tesloApi.get<Product[]>('/products');
+    const product = products.data[0];
+    const productId = product.id;
+
+    const updatedProduct = {
+      ...product,
+      title: 'Updated Product',
+      description: 'Updated Description',
+    };
+
+    const resp = await createUpdateProductAction(updatedProduct);
+
+    expect(resp).toEqual(
+      expect.objectContaining({
+        ...product,
+        id: productId,
+        title: 'Updated Product',
+        description: 'Updated Description',
+      }),
+    );
+  });
 });
